@@ -9,8 +9,10 @@ import UIKit
 
 class NewsListRouter {
 	static func createInitialViewController() -> UIViewController {
+		
 		let newsListViewController = NewsListViewController()
 		let navigationController = UINavigationController(rootViewController: newsListViewController)
+		
 		return navigationController
 	}
 }
