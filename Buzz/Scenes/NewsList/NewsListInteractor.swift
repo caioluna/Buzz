@@ -7,15 +7,23 @@
 
 import Foundation
 
-class NewsListInteractor {
+protocol NewsListBusinessLogic {
+	func loadNews(request: NewsListModel.FetchNews.Request)
+}
+
+protocol NewsListDataStore {
+	var articles: [Article] { get set }
+}
+
+class NewsListInteractor: NewsListBusinessLogic, NewsListDataStore {
 	private var worker: NewsAPIWorker
-	private var articles: [Article] = []
+	var articles: [Article] = []
 	
 	init(worker: NewsAPIWorker = NewsAPIWorker(networkingService: URLSessionNetworking())) {
 		self.worker = worker
 	}
 	
-	func loadNews() {
+	func loadNews(request: NewsListModel.FetchNews.Request) {
 		worker.fetchNews { [weak self] result in
 			
 			guard let self else { return }
@@ -24,6 +32,7 @@ class NewsListInteractor {
 				switch result {
 				case .success(let fetchedArticles):
 					self.articles = fetchedArticles
+					let response = NewsListModel.FetchNews.Response(articles: fetchedArticles)
 					print(fetchedArticles)
 				case .failure(let failure):
 					print("There was an error when fetching articles: \(failure.localizedDescription)")

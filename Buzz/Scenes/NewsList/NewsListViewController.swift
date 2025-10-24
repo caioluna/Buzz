@@ -15,9 +15,7 @@ class NewsListViewController: UIViewController {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
 		view.backgroundColor = .purple
-		interactor.loadNews()
+		interactor.loadNews(request: NewsListModel.FetchNews.Request())
 	}
-
-
 }
 
