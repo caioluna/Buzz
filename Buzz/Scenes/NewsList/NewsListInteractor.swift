@@ -17,14 +17,16 @@ class NewsListInteractor {
 	
 	func loadNews() {
 		worker.fetchNews { [weak self] result in
+			
 			guard let self else { return }
+			
 			DispatchQueue.main.async {
 				switch result {
 				case .success(let fetchedArticles):
 					self.articles = fetchedArticles
 					print(fetchedArticles)
 				case .failure(let failure):
-					print("There was an error when fetching articles: \(failure)")
+					print("There was an error when fetching articles: \(failure.localizedDescription)")
 				}
 			}
 		}
