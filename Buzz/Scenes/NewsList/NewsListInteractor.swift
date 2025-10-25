@@ -18,6 +18,7 @@ protocol NewsListDataStore {
 class NewsListInteractor: NewsListBusinessLogic, NewsListDataStore {
 	private var worker: NewsAPIWorker
 	var articles: [Article] = []
+	var presenter: NewsListPresentationLogic?
 	
 	init(worker: NewsAPIWorker = NewsAPIWorker(networkingService: URLSessionNetworking())) {
 		self.worker = worker
@@ -33,9 +34,11 @@ class NewsListInteractor: NewsListBusinessLogic, NewsListDataStore {
 				case .success(let fetchedArticles):
 					self.articles = fetchedArticles
 					let response = NewsListModel.FetchNews.Response(articles: fetchedArticles)
+					self.presenter?.presentFetchedNews(response: response)
 					print(fetchedArticles)
 				case .failure(let failure):
 					print("There was an error when fetching articles: \(failure.localizedDescription)")
+					self.presenter?.presentError(error: failure)
 				}
 			}
 		}
